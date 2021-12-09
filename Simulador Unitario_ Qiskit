@@ -1,0 +1,21 @@
+"Simulador Unitario"
+    #pacotes adicionais
+import matplotlib.pyplot as plt
+import numpy as np
+from math import pi
+from qiskit import QuantumCircuit, ClassicalRegister, QuantumRegister, transpile
+from qiskit.tools.visualization import circuit_drawer
+from qiskit.quantum_info import state_fidelity
+from qiskit import BasicAer
+from qiskit import*
+
+    #calcula Matriz Unitaria
+backend = BasicAer.get_backend('unitary_simulator') 
+    #Porta U 
+q = QuantumRegister(1)
+qc = QuantumCircuit(q)
+qc.u(pi/2,pi/2,pi/2,q)
+qc.draw()
+
+job = backend.run(transpile(qc, backend))
+job.result().get_unitary(qc, decimals=3)
