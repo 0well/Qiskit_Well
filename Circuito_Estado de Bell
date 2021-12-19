@@ -1,0 +1,9 @@
+from qiskit import QuantumCircuit
+# Cria um circuito com 2 q-bits
+circ = QuantumCircuit(2)
+# Porta Hadamar colocando o quibit em superposição |0> + |1>.
+circ.h(0)
+# Uma porta "X" (CNOT) no qubit de controle 0 e no qubit de destino 1 gera um estado Bell.
+circ.cx(0, 1)
+# Draw the circuit
+circ.draw()
