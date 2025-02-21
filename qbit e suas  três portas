@@ -1,0 +1,32 @@
+import numpy as np
+from qiskit import QuantumCircuit, transpile
+from qiskit_aer import AerSimulator
+from qiskit.visualization import plot_histogram
+from qiskit.quantum_info.operators import Operator
+
+# Definição das portas unitárias corretas
+U1 = np.array([[1/np.sqrt(2), 1/np.sqrt(2)], [1/np.sqrt(2), -1/np.sqrt(2)]])  # Correspondente à porta Hadamard
+U2 = np.array([[1, 0], [0, -1]])  # Correspondente à porta Pauli-Z no Qiskit
+U3 = np.array([[0, 1], [1, 0]])  # Correspondente à porta Pauli-X no Qiskit
+
+# Criação do circuito quântico
+qc = QuantumCircuit(1, 1)  # Apenas um qubit e um bit clássico
+qc.unitary(Operator(U1), [0], label='U1')  # Aplicando a porta U1
+qc.unitary(Operator(U3), [0], label='U3')  # Aplicando a porta U3
+qc.unitary(Operator(U2), [0], label='U2')  # Aplicando a porta U2
+qc.measure(0, 0)  # Medindo o qubit 0 e armazenando no bit clássico 0
+
+# Simulação do circuito
+simulador = AerSimulator()
+compilar_circuito = transpile(qc, simulador)
+shot = simulador.run(compilar_circuito, shots=1000)
+resultado = shot.result()
+contagem = resultado.get_counts(compilar_circuito)
+
+# Mostrar o valor total de medidas
+print("\nTotal contagem de 0 e 1 são respectivamente:", contagem)
+
+# Plotar o histograma
+qc.draw("mpl")
+
+
